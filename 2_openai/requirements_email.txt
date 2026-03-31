@@ -1,0 +1,9 @@
+# Requirements para email_response_handler.py
+# Ya instalados desde el requirements.txt principal:
+# - python-dotenv
+# - openai-agents
+
+# Nuevos requirements para el webhook:
+fastapi
+uvicorn[standard]
+resend
