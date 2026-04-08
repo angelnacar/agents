@@ -1,30 +1,40 @@
 find_trending_companies:
   description: >
-    Encuentra las empresas en tendencia más importantes en las noticias del sector de {sector} buscando las últimas noticias. 
+    Encuentra las empresas en tendencia más importantes en las noticias del sector de {sector} buscando las últimas noticias en medios especializados en el sector financiero. 
     Encuentra nuevas empresas que no has encontrado antes.
   expected_output: >
     Una lista de empresas en tendencia en el sector de {sector}
   agent: trending_company_finder
-  output_file: output/trending_companies.json
+  output_file: output/trending_companies3.json
 
 research_trending_companies:
   description: >
     Dada una lista de empresas en tendencia, proporciona un análisis detallado de cada empresa en un informe buscando en línea
+    IMPORTANTE: La fecha actual es {current_date}. 
+    Cualquier dato, reporte o proyección que encuentres con fecha anterior a 2026 
+    debe ser tratado como "histórico". 
+    El informe final DEBE reflejar que estamos en {current_date} y no debe 
+    utilizar fechas pasadas (como 2024 o 2025) como si fueran la fecha actual.
   expected_output: >
     Un informe que contiene un análisis detallado de cada empresa
   agent: financial_researcher
   context:
     - find_trending_companies
-  output_file: output/research_report.json
+  output_file: output/research_report3.json
 
 pick_best_company:
   description: >
     Analiza los hallazgos de la investigación y elige la mejor empresa para inversión.
-    Envía una notificación push al usuario con la decisión y un razonamiento de 1 frase.
     Luego responde con un informe detallado sobre por qué elegiste esta empresa, y cuáles empresas no fueron seleccionadas.
+    UNA VEZ QUE HAYAS TOMADO LA DECISIÓN FINAL:
+    1. Utiliza la herramienta 'PushNotificationTool' para enviar un resumen rápido de la empresa elegida.
+    2. Utiliza la herramienta 'SenderEmailTool' para enviar el informe detallado por correo electrónico.
+    
+    No consideres la tarea como completada hasta que ambas notificaciones hayan sido enviadas
+  
   expected_output: >
-    La empresa elegida y por qué fue elegida; las empresas que no fueron seleccionadas y por qué no fueron seleccionadas.
+    Un informe con la empresa elegida y por qué fue elegida; las empresas que no fueron seleccionadas y por qué no fueron seleccionadas y la confirmación de que la notificación push y el email han sido enviados exitosamente.
   agent: stock_picker
   context:
     - research_trending_companies
-  output_file: output/decision.md
+  output_file: output/decision3.md

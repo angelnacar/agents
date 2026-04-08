@@ -3,7 +3,7 @@ import sys
 import warnings
 import os
 from datetime import datetime
-
+from IPython.display import Markdown, display
 from stock_pricer.crew import StockPicker
 
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
@@ -24,6 +24,8 @@ def run():
     # Print the result
     print("\n\n=== DECISION FINAL ===\n\n")
     print(result.raw)
+    print(Markdown(result.raw))
+    
 
 
 if __name__ == "__main__":

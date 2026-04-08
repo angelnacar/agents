@@ -4,6 +4,7 @@ from crewai_tools import SerperDevTool
 from pydantic import BaseModel, Field
 from typing import List
 from .tools.push_tool import PushNotificationTool
+from .tools.sender_email import SenderEmailTool
 from crewai.memory import LongTermMemory, ShortTermMemory, EntityMemory
 from crewai.memory.storage.rag_storage import RAGStorage
 from crewai.memory.storage.ltm_sqlite_storage import LTMSQLiteStorage
@@ -51,7 +52,7 @@ class StockPicker():
     @agent
     def stock_picker(self) -> Agent:
         return Agent(config=self.agents_config['stock_picker'], 
-                     tools=[PushNotificationTool()], 
+                     tools=[PushNotificationTool(),SenderEmailTool()],
                      memory = True)
     
     @task

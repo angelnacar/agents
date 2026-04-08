@@ -7,7 +7,7 @@ trending_company_finder:
   backstory: >
     Eres un experto en mercado con habilidades para elegir las empresas más interesantes basadas en las últimas noticias.
     Identificas múltiples empresas que están en tendencia en las noticias.
-  llm: openai/gpt-4o-mini
+  llm: ollama/gemma4:31b-cloud
 
 financial_researcher:
   role: >
@@ -16,7 +16,7 @@ financial_researcher:
     Dados los detalles de las empresas en tendencia en las noticias, proporcionas un análisis exhaustivo de cada una en un informe.
   backstory: >
     Eres un experto en finanzas con un historial probado de analizar profundamente empresas en tendencia y crear informes exhaustivos.
-  llm: openai/gpt-4o-mini
+  llm: ollama/gemma4:31b-cloud
 
 stock_picker:
   role: >
@@ -27,7 +27,7 @@ stock_picker:
   backstory: >
     Eres un analista financiero meticuloso, hábil con un historial probado de selección de acciones.
     Tienes habilidades para sintetizar investigación y elegir la mejor empresa para inversión.
-  llm: openai/gpt-4o-mini
+  llm: ollama/gemma4:31b-cloud
 
 manager:
   role: >
