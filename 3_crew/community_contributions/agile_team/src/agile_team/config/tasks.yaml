@@ -1,17 +1,87 @@
-research_task:
+requirement_definition:
   description: >
-    Conduct a thorough research about {topic}
-    Make sure you find any interesting and relevant information given
-    the current year is {current_year}.
+    Analizar las necesidades del cliente y transformarlas en especificaciones técnicas detalladas.
+    Debes definir los requerimientos funcionales y no funcionales, crear historias de usuario
+    y establecer los criterios de aceptación para el producto.
+    Aquí los requisitos iniciales: {initial_requirements}
   expected_output: >
-    A list with 10 bullet points of the most relevant information about {topic}
-  agent: researcher
+    Un documento de requerimientos del producto (PRD) detallado con historias de usuario y criterios de aceptación en formato Markdown.
+  agent: product_owner
+  output_file: output/product_requirements.md
 
-reporting_task:
+technical_architecture:
   description: >
-    Review the context you got and expand each topic into a full section for a report.
-    Make sure the report is detailed and contains any and all relevant information.
+    Diseñar la arquitectura técnica del sistema basándose en los requerimientos definidos.
+    Define el modelo de datos, la estructura de la API, los patrones de diseño a utilizar
+    y la estrategia de despliegue. Además, debes crear un prototipo o esqueleto técnico ejecutable en Python.
+    Guarda los ficheros .py en el directorio output/implementation/architecture/.
   expected_output: >
-    A fully fledged report with the main topics, each with a full section of information.
-    Formatted as markdown without '```'
-  agent: reporting_analyst
+    Un documento de diseño arquitectónico técnico en formato Markdown que incluya el diagrama de entidad-relación,
+    especificaciones de endpoints de la API y justificación de las decisiones técnicas, acompañado de ficheros .py con la estructura base del proyecto.
+  agent: tech_lead
+  output_file: output/technical_architecture.md
+  context: [requirement_definition]
+
+backend_development:
+  description: >
+    Implementar la lógica del servidor, la base de datos y las APIs según la arquitectura definida.
+    Asegura que el código sea escalable, eficiente y siga las mejores prácticas de desarrollo en Python.
+    Todo el desarrollo debe realizarse en ficheros .py ejecutables.
+    Guarda los ficheros .py en el directorio output/implementation/backend/.
+  expected_output: >
+    Código fuente del backend implementado en ficheros .py ejecutables, junto con una documentación técnica de los endpoints y la estructura de datos en formato Markdown.
+  agent: backend_engineer
+  output_file: output/backend_implementation.md
+  context: [technical_architecture]
+
+frontend_development:
+  description: >
+    Desarrollar la interfaz de usuario basada en los requerimientos y la arquitectura técnica.
+    Implementa una UI intuitiva, responsive y conectada a las APIs del backend,
+    enfocándote en la experiencia de usuario (UX) y la performance.
+    Para permitir la ejecución inmediata, el desarrollo debe realizarse utilizando frameworks de Python (como Streamlit o Reflex) en ficheros .py ejecutables.
+    Guarda los ficheros .py en el directorio output/implementation/frontend/.
+  expected_output: >
+    Código fuente del frontend implementado en ficheros .py ejecutables, junto con un documento de guía de interfaz y UX en formato Markdown.
+  agent: frontend_engineer
+  output_file: output/frontend_implementation.md
+  context: [technical_architecture]
+
+security_audit:
+  description: >
+    Realizar una auditoría de seguridad exhaustiva sobre el código generado por el equipo de desarrollo.
+    Identifica vulnerabilidades según los estándares de OWASP, verifica la gestión de autenticación
+    y propone medidas de mitigación para cualquier riesgo encontrado.
+    Debes proporcionar scripts de prueba de seguridad o scanners automatizados implementados en ficheros .py ejecutables.
+    Guarda los ficheros .py en el directorio output/implementation/security/.
+  expected_output: >
+    Un informe detallado de auditoría de seguridad en formato Markdown detallando las vulnerabilidades encontradas,
+    su nivel de criticidad y las recomendaciones precisas para su corrección, acompañado de los scripts de validación en ficheros .py.
+  agent: security_engineer
+  output_file: output/security_audit_report.md
+  context: [backend_development, frontend_development]
+
+quality_assurance:
+  description: >
+    Planificar y ejecutar pruebas exhaustivas (unitarias, integración y end-to-end) para asegurar la calidad del software.
+    Verifica que todas las historias de usuario se cumplan y que el sistema esté libre de bugs críticos.
+    Todas las suites de prueba deben implementarse en ficheros .py ejecutables (usando pytest o unittest).
+    Guarda los ficheros .py en el directorio output/implementation/tests/.
+  expected_output: >
+    Un reporte de calidad (QA Report) detallado en formato Markdown con los casos de prueba ejecutados,
+    los bugs reportados y la validación final de los criterios de aceptación, acompañado de los ficheros .py de los tests.
+  agent: qa_engineer
+  output_file: output/qa_report.md
+  context: [backend_development, frontend_development]
+
+sprint_review:
+  description: >
+    Coordinar el cierre del ciclo de desarrollo, validar que no queden impedimentos críticos
+    y resumir los logros del equipo durante el sprint. Asegura que el incremento de software
+    esté listo para ser entregado.
+  expected_output: >
+    Un resumen ejecutivo del sprint en formato Markdown que incluya el estado final del incremento de software,
+    el cumplimiento de los objetivos y una retrospectiva breve sobre la eficiencia del proceso.
+  agent: scrum_master
+  output_file: output/sprint_review.md
+  context: [security_audit, quality_assurance]

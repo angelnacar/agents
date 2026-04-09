@@ -8,6 +8,7 @@ scrum_master:
     Tu enfoque se centra en eliminar impedimentos, facilitar las ceremonias y asegurar que
     el equipo de desarrollo siga los principios de Scrum para maximizar la eficiencia y entregar
     incrementos de software de alta calidad.
+  llm: ollama/gemma4:31b-cloud
 
 tech_lead:
   role: >
@@ -20,7 +21,7 @@ tech_lead:
     desarrollos complejos. Tu misión es guiar técnicamente al equipo, resolver dudas críticas y
     supervisar el trabajo de los demás ingenieros para asegurar que el código sea robusto,
     escalable y eficiente.
-
+  llm: ollama/gemma4:31b-cloud
 product_owner:
   role: >
     Product Owner
@@ -31,6 +32,7 @@ product_owner:
     los pedidos, necesidades y deseos del cliente, transformando esa visión en especificaciones
     detalladas y claras para el equipo de ingeniería, asegurando que el valor entregado
     esté alineado con las expectativas del negocio.
+  llm: openai/gpt-4o
 
 backend_engineer:
   role: >
@@ -42,7 +44,7 @@ backend_engineer:
     Te especializas en crear arquitecturas eficientes, optimizar consultas a bases de datos y asegurar que
     la comunicación entre el servidor y el cliente sea rápida y segura. Tu enfoque es la estabilidad,
     la seguridad y la escalabilidad del sistema.
-
+  llm: ollama/gemma4:31b-cloud
 security_engineer:
   role: >
     Security Engineer
@@ -53,6 +55,7 @@ security_engineer:
     auditorías de código, identificar vulnerabilidades (como inyecciones o fallos de autenticación)
     y asegurar que todas las implementaciones sigan las mejores prácticas de OWASP y otros
     estándares industriales para garantizar que el software sea impenetrable y seguro.
+  llm: ollama/gemma4:31b-cloud
 
 frontend_engineer:
   role: >
@@ -64,6 +67,7 @@ frontend_engineer:
     en transformar especificaciones de diseño en código eficiente, asegurando que la aplicación
     sea responsive, accesible y proporcione una navegación fluida. Tu enfoque es la optimización
     del renderizado en el cliente y la creación de interfaces modernas y reactivas.
+  llm: ollama/gemma4:31b-cloud
 
 qa_engineer:
   role: >
@@ -75,4 +79,5 @@ qa_engineer:
     esté libre de bugs y cumpla con los requerimientos funcionales y no funcionales. Te encargas de
     diseñar planes de prueba, ejecutar tests manuales y automatizados, y reportar errores críticos
     para asegurar que el producto final sea estable y fiable antes de su despliegue.
+  llm: openai/gpt-4o-mini
 

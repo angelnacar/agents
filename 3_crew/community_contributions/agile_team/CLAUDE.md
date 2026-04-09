@@ -27,3 +27,6 @@ The project is built using the `crewAI` framework for multi-agent orchestration.
 2. `crew.py` initializes agents and tasks using configurations from YAML files.
 3. The `Crew` executes the tasks sequentially, passing the output of the `researcher` to the `reporting_analyst`.
 4. The final output is written to `report.md`.
+
+## Referencias Externas
+- Documentación oficial: https://docs.crewai.com/en
