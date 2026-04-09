@@ -11,8 +11,9 @@ warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 # Crea el directorio de salida si no existe
 os.makedirs('output', exist_ok=True)
 
-assignment = 'Escribe un programa Python para calcular los primeros 10,000 términos \
-    de esta serie, multiplicando el total por 4: 1 - 1/3 + 1/5 - 1/7 + ...'
+# assignment = 'Escribe un programa Python para calcular los primeros 10,000 términos \
+#     de esta serie, multiplicando el total por 4: 1 - 1/3 + 1/5 - 1/7 + ...'
+assignment = 'Escribe un programa Python para calcular los números primos entre 1 y 1000, e imprímelos en una lista.'
 
 def run():
     """

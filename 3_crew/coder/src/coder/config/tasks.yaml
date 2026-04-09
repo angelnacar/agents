@@ -4,4 +4,4 @@ coding_task:
   expected_output: >
     Un archivo de texto que incluye el código mismo, junto con la salida del código.
   agent: coder
-  output_file: output/code_and_output.txt
+  output_file: output/code_and_output2.txt
