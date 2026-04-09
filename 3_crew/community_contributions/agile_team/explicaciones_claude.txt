@@ -1,0 +1,36 @@
+He implementado un sistema de Salidas Estructuradas y una Herramienta de Persistencia, ya que por defecto CrewAI devuelve el resultado de una tarea como un string,
+  lo cual no es suficiente si queremos generar archivos .py ejecutables de forma fiable.
+
+  Aquí tienes la explicación detallada:
+
+  1. schemas.py (El "Contrato" de Datos)
+
+  He creado este archivo para definir modelos de Pydantic. En lugar de decirle al agente "escribe un código", le damos una estructura exacta que debe rellenar.
+
+  - CodeFile: Es la unidad básica. Define que cada archivo debe tener un filename (nombre), content (el código real) y un path (donde guardarlo).
+  - ImplementationOutput: Lo usan el Backend y Frontend Engineer. No devuelven solo texto, sino una lista de objetos CodeFile. Esto es el "Manifiesto de Código": el
+  agente dice "Voy a crear estos 3 archivos con este contenido".
+  - Modelos de Gestión (PRD, ArchitectureDesign, SprintReview): Aseguran que el Product Owner o el Tech Lead no olviden secciones críticas (como criterios de
+  aceptación o patrones de diseño), obligándolos a llenar esos campos específicos.
+
+  ¿Para qué sirve? Para que el resultado de la tarea sea un objeto de Python manipulable y no un bloque de texto donde el código esté mezclado con comentarios.
+
+  2. custom_tool.py (El "Brazo Ejecutor")
+
+  Pydantic define qué queremos, pero no cómo se guarda en el disco. El FileWriterTool es la herramienta que permite a los agentes escribir físicamente esos archivos.
+
+  - _run: Este método toma el nombre del archivo, el contenido y la carpeta, crea la carpeta si no existe (os.makedirs) y escribe el archivo.
+  - Integración: Al darle esta herramienta a los ingenieros, ellos pueden tomar la estructura definida en schemas.py y ejecutar la herramienta para persistir el código
+   en output/implementation/....
+
+  Resumen del Flujo:
+
+  1. Tarea: El agente recibe la instrucción.
+  2. Pensamiento: El agente genera la solución.
+  3. Salida Estructurada (schemas.py): El agente organiza su respuesta en el modelo Pydantic (ej: ImplementationOutput con 2 CodeFile).
+  4. Acción (custom_tool.py): El agente usa el FileWriterTool para guardar cada CodeFile en el disco.
+
+  Esto garantiza que el resultado final sea un proyecto de software real y ejecutable, y no solo un documento de texto describiendo el código.
+
+  ---Nota: He intentado actualizar crew.py para conectar todo esto, pero hubo un error de coincidencia de texto. Procederé a corregirlo ahora mismo para que el sistema
+   esté plenamente operativo.

@@ -1,19 +1,29 @@
+import os
 from crewai.tools import BaseTool
-from typing import Type
 from pydantic import BaseModel, Field
+from typing import Type
 
+class FileWriteInput(BaseModel):
+    """Input schema for FileWriterTool."""
+    filename: str = Field(..., description="The name of the file.")
+    content: str = Field(..., description="The content to write to the file.")
+    directory: str = Field(..., description="The directory path relative to project root.")
 
-class MyCustomToolInput(BaseModel):
-    """Input schema for MyCustomTool."""
-    argument: str = Field(..., description="Description of the argument.")
+class FileWriterTool(BaseTool):
+    name: str = "file_writer_tool"
+    description: str = "Writes content to a file at a specific directory. Useful for persisting code and reports."
+    args_schema: Type[BaseModel] = FileWriteInput
 
-class MyCustomTool(BaseTool):
-    name: str = "Name of my tool"
-    description: str = (
-        "Clear description for what this tool is useful for, your agent will need this information to use it."
-    )
-    args_schema: Type[BaseModel] = MyCustomToolInput
+    def _run(self, filename: str, content: str, directory: str) -> str:
+        try:
+            # Ensure directory exists
+            full_dir = os.path.join("output", directory)
+            os.makedirs(full_dir, exist_ok=True)
 
-    def _run(self, argument: str) -> str:
-        # Implementation goes here
-        return "this is an example of a tool output, ignore it and move along."
+            full_path = os.path.join(full_dir, filename)
+            with open(full_path, "w", encoding="utf-8") as f:
+                f.write(content)
+
+            return f"Successfully wrote file to {full_path}"
+        except Exception as e:
+            return f"Error writing file: {str(e)}"
