@@ -5,7 +5,9 @@ description = "agile_team using crewAI"
 authors = [{ name = "Your Name", email = "you@example.com" }]
 requires-python = ">=3.10,<3.14"
 dependencies = [
-    "crewai[tools]==1.13.0"
+    "crewai[tools]==1.13.0",
+    "gradio>=6.11.0",
+    "matplotlib>=3.10.8",
 ]
 
 [project.scripts]
