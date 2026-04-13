@@ -26,10 +26,10 @@ Este documento establece los requerimientos completos para el desarrollo de un *
 Dado que el cliente solicita únicamente un prototipo para presentación ejecutiva, este documento se enfoca en:
 
 - Demostrar el concepto de manera tangible y operativa
-- Validar la experiencia de usuario intended
+- Validar la experiencia de usuario prevista
 - Mostrar el flujo completo de uso de la aplicación
 - Proporcionar una base sólida para futuras implementaciones con persistencia de datos
-- Minimizar el tiempo de desarrollo mientras se maximiza el valor demonstrable
+- Minimizar el tiempo de desarrollo mientras se maximiza el valor demostrable
 
 ### 2.3 Alcance del Prototipo vs. Versión de Producción
 
@@ -110,11 +110,11 @@ La aplicación consiste en un sistema de gestión de gastos personales basado en
 #### 5.1.3 Categorización Automática
 - Categorías predefinidas del sistema:
   - 🏠 **Vivienda**: Alquiler, hipoteca, servicios públicos, mantenimiento
-  - 🍔 **Alimentación**: Comidas, supermercado, restaurantes,外卖
+  - 🍔 **Alimentación**: Comidas, supermercado, restaurantes, delivery
   - 🚗 **Transporte**: Gasolina, transporte público, mantenimiento vehicular, estacionamiento
   - 🎮 **Entretenimiento**: Cine, streaming, videojuegos, actividades recreativas
-  - 🛒 **Compras**: Ropa,electronics, artículos del hogar, compras varias
-  - 💊 **Salud**: Medicamentos, consultas médicas, seguro de salud,健身房
+  - 🛒 **Compras**: Ropa, electrónicos, artículos del hogar, compras varias
+  - 💊 **Salud**: Medicamentos, consultas médicas, seguro de salud, gimnasio
   - 📚 **Educación**: Cursos, libros, suscripciones, formación
   - 💰 **Otros**: Gastos no categorizados automáticamente
 
@@ -214,7 +214,7 @@ La aplicación consiste en un sistema de gestión de gastos personales basado en
 
 ```
 Vivienda: ["alquiler", "hipoteca", "luz", "agua", "gas", "internet", "teléfono", "mantenimiento", "reforma", "muebles"]
-Alimentación: ["comida", "supermercado", "restaurante", "cena", "almuerzo", "desayuno", "fruta", "verdura", "carne", "pescado", "pan", "leche", "cafe", "外卖", "delivery"]
+Alimentación: ["comida", "supermercado", "restaurante", "cena", "almuerzo", "desayuno", "fruta", "verdura", "carne", "pescado", "pan", "leche", "cafe", "delivery", "pedido a domicilio"]
 Transporte: ["gasolina", "diesel", "taxi", "uber", "bus", "metro", "tren", "estacionamiento", "peaje", "mantenimiento coche", "neumáticos", "seguro coche"]
 Entretenimiento: ["cine", "netflix", "spotify", "amazon prime", "videojuego", "juego", "concierto", "teatro", "museo", "excursión", "viaje", "vacaciones"]
 Compras: ["ropa", "zapatos", "electrónica", "teléfono", "computadora", "tablet", "hogar", "decoración", "regalo", "amazon", "tienda"]
@@ -294,7 +294,7 @@ Educación: ["curso", "universidad", "libro", "escuela", "formación", "certific
 | RNF-03.01 | El código seguirá principios de POO | Clases bien definidas con responsabilidades únicas |
 | RNF-03.02 | La estructura del proyecto será modular | Fácil identificación de componentes |
 | RNF-03.03 | El código será documentado | Docstrings en todas las clases y métodos públicos |
-| RNF-03.04 | El sistema permitirá añadir nuevas categorías fácilmente | Sin修改 al código core, solo configuración |
+| RNF-03.04 | El sistema permitirá añadir nuevas categorías fácilmente | Sin modificar al código core, solo configuración |
 | RNF-03.05 | La arquitectura soportará migración a base de datos | Interfaces abstrayendo el acceso a datos |
 
 ### 7.4 RNF-04: Mantenibilidad
@@ -345,9 +345,9 @@ ENTONCES veré un mensaje de error indicando "Credenciales inválidas"
 Y permaneceré en la pantalla de login
 ```
 
-** Definition of Done**:
+**Definition of Done**:
 - [ ] Pantalla de login visible y funcional
-- [ ] Validación de credenciales implemented
+- [ ] Validación de credenciales implementada
 - [ ] Mensajes de error apropiados mostrados
 - [ ] Redirección exitosa tras login válido
 - [ ] Tests unitarios pasando
@@ -381,7 +381,7 @@ ENTONCES veré un mensaje de error indicando "El usuario ya existe"
 Y permaneceré en la pantalla de registro
 ```
 
-** Definition of Done**:
+**Definition of Done**:
 - [ ] Formulario de registro con validación
 - [ ] Creación de usuario en memoria funcional
 - [ ] Verificación de usuario único
@@ -407,7 +407,7 @@ Y seré redirigido a la pantalla de login
 Y mis datos de gastos de esta sesión seguirán disponibles hasta reiniciar la app
 ```
 
-** Definition of Done**:
+**Definition of Done**:
 - [ ] Botón de logout visible y accesible
 - [ ] Sesión limpiada correctamente
 - [ ] Redirección a login funcional
@@ -449,7 +449,7 @@ ENTONCES veré un mensaje de error indicando que el monto es requerido
 Y el gasto no será guardado
 ```
 
-** Definition of Done**:
+**Definition of Done**:
 - [ ] Formulario de registro de gastos funcional
 - [ ] Validación de campos obligatorios
 - [ ] Gasto añadido a la lista en memoria
@@ -495,7 +495,7 @@ ENTONCES el sistema no encontrará coincidencia
 Y asignará la categoría "Otros"
 ```
 
-** Definition of Done**:
+**Definition of Done**:
 - [ ] Algoritmo de categorización implementado
 - [ ] Mapeo de palabras clave funcional
 - [ ] Categoría "Otros" para gastos no reconocibles
@@ -524,7 +524,7 @@ Y la lista mostrará los nuevos valores
 Y las estadísticas se recalcularán automáticamente
 ```
 
-** Definition of Done**:
+**Definition of Done**:
 - [ ] Función de edición accesible desde la lista
 - [ ] Campos editables con valores actuales
 - [ ] Validación de campos al guardar
@@ -560,7 +560,7 @@ ENTONCES el gasto permanecerá en la lista
 Y no habrá ningún cambio
 ```
 
-** Definition of Done**:
+**Definition of Done**:
 - [ ] Opción de eliminación visible en cada gasto
 - [ ] Confirmación antes de eliminar
 - [ ] Opción de cancelar la acción
@@ -599,7 +599,7 @@ ENTONCES veré un mensaje indicando "No hay gastos registrados este mes"
 Y los gráficos mostrarán vacío o mensaje informativo
 ```
 
-** Definition of Done**:
+**Definition of Done**:
 - [ ] Dashboard de estadísticas implementado
 - [ ] Cálculos de métricas correctos
 - [ ] Manejo de escenario sin datos
@@ -634,7 +634,7 @@ ENTONCES el gráfico de pastel mostrará 100% en esa categoría
 Y habrá un mensaje indicando que solo hay una categoría
 ```
 
-** Definition of Done**:
+**Definition of Done**:
 - [ ] Gráfico de pastel implementado con Gradio
 - [ ] Colores diferenciados por categoría
 - [ ] Tooltips con información detallada
@@ -667,7 +667,7 @@ ENTONCES veré un mensaje indicando la ausencia de datos
 Y los gráficos mostrarán estado vacío
 ```
 
-** Definition of Done**:
+**Definition of Done**:
 - [ ] Selector de mes/año funcional
 - [ ] Filtrado correcto de datos por período
 - [ ] Actualización de todos los componentes estadísticos
@@ -697,7 +697,7 @@ Y podré acceder a "Estadísticas" con un clic
 Y podré acceder a "Cerrar Sesión" con un clic
 ```
 
-** Definition of Done**:
+**Definition of Done**:
 - [ ] Navegación clara y accesible
 - [ ] Feedback visual del elemento activo
 - [ ] Consistencia en la ubicación de elementos de navegación
@@ -726,7 +726,7 @@ Y el mensaje indicará qué campo es incorrecto
 Y el mensaje estará en color rojo
 ```
 
-** Definition of Done**:
+**Definition of Done**:
 - [ ] Sistema de notificaciones implementado
 - [ ] Colores diferenciados para éxito/error
 - [ ] Mensajes descriptivos y útiles

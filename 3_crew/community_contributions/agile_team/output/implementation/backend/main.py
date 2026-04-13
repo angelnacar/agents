@@ -66,21 +66,22 @@ class AppState:
 APP_STATE = AppState()
 
 
-def login_user(username: str, password: str, main_panel, auth_panel):
+def login_user(username: str, password: str):
     """Maneja el login de usuario."""
     auth_service = SERVICES['auth']
     result = auth_service.login(username, password)
-    
+
     if result.is_success:
         APP_STATE.current_user = result.data
+        welcome_msg = f"✅ ¡Bienvenido {result.data.full_name}!"
         username_display = f"👤 {result.data.full_name}"
         return (
-            gr.update(visible=True, elem_id="main_panel"),
+            gr.update(visible=True),
             gr.update(visible=False),
-            f"✅ ¡Bienvenido {result.data.full_name}!",
+            welcome_msg,
             username_display
         )
-    return main_panel, auth_panel, "❌ Credenciales inválidas", ""
+    return gr.update(), gr.update(), "❌ Credenciales inválidas", ""
 
 
 def register_user(full_name: str, username: str, password: str):
@@ -93,7 +94,7 @@ def register_user(full_name: str, username: str, password: str):
     return f"❌ {result.error}"
 
 
-def logout_user(main_panel, auth_panel):
+def logout_user():
     """Maneja el cierre de sesión."""
     auth_service = SERVICES['auth']
     auth_service.logout()
@@ -129,13 +130,13 @@ def delete_expense(expense_id: str):
     """Elimina un gasto."""
     if not APP_STATE.is_authenticated():
         return "❌ Debes iniciar sesión primero."
-    
+
     expense_service = SERVICES['expense']
     result = expense_service.delete_expense(expense_id, APP_STATE.get_user_id())
-    
+
     if result.is_success:
-        return gr.update(), get_expenses_data(), get_stats_data()
-    return f"❌ {result.error}", gr.update(), gr.update()
+        return "✅ Gasto eliminado exitosamente.", get_expenses_data()
+    return f"❌ {result.error}", []
 
 
 def get_expenses_data():
@@ -235,16 +236,19 @@ def create_bar_chart(chart_data: dict):
 
 
 def update_period(year: int, month: str):
-    """Actualiza el período seleccionado."""
+    """Actualiza el período seleccionado y refresca datos."""
     month_num = MONTH_NAMES.index(month) + 1 if month in MONTH_NAMES else datetime.now().month
-    APP_STATE.selected_year = year
+    APP_STATE.selected_year = int(year)
     APP_STATE.selected_month = month_num
-    return get_expenses_data(), get_stats_data()
+
+    expenses = get_expenses_data()
+    stats = get_stats_data()  # returns (total, count, avg, top_cat, pie, bar)
+    return (expenses,) + stats
 
 
 def create_interface():
     """Crea la interfaz completa de Gradio."""
-    
+
     with gr.Blocks(
         title="💰 Gestor de Gastos Personales",
         theme=gr.themes.Soft(
@@ -256,11 +260,12 @@ def create_interface():
         # 💰 Gestor de Gastos Personales
         *Registra tus gastos, categorízalos automáticamente y visualiza tus estadísticas*
         """)
-        
+
         with gr.Row():
+            # --- Panel de autenticación ---
             with gr.Column(scale=1, visible=True) as auth_panel:
                 gr.Markdown("## 🔐 Acceso al Sistema")
-                
+
                 with gr.Tab("🔓 Iniciar Sesión"):
                     login_username = gr.Textbox(
                         label="Usuario",
@@ -279,7 +284,7 @@ def create_interface():
                         interactive=False,
                         show_label=False
                     )
-                
+
                 with gr.Tab("📝 Registrarse"):
                     reg_fullname = gr.Textbox(
                         label="Nombre Completo",
@@ -303,36 +308,20 @@ def create_interface():
                         interactive=False,
                         show_label=False
                     )
-                
-                login_btn.click(
-                    login_user,
-                    inputs=[login_username, login_password, main_panel, auth_panel],
-                    outputs=[main_panel, auth_panel, login_output, username_display]
-                )
-                
-                register_btn.click(
-                    register_user,
-                    inputs=[reg_fullname, reg_username, reg_password],
-                    outputs=[register_output]
-                )
-            
+
+            # --- Panel principal (oculto hasta login) ---
             with gr.Column(scale=2, visible=False) as main_panel:
                 username_display = gr.Markdown("👤 Usuario")
-                
+
                 with gr.Row():
                     logout_btn = gr.Button("Cerrar Sesión", variant="secondary", size="sm")
-                    logout_btn.click(
-                        logout_user,
-                        inputs=[main_panel, auth_panel],
-                        outputs=[main_panel, auth_panel, login_output, username_display]
-                    )
-                
+
                 gr.Markdown("---")
-                
+
                 with gr.Tabs():
                     with gr.Tab("📝 Registrar Gasto"):
                         gr.Markdown("### ➕ Nuevo Gasto")
-                        
+
                         with gr.Row():
                             amount_input = gr.Number(
                                 label="Monto *",
@@ -340,60 +329,47 @@ def create_interface():
                                 precision=2,
                                 scale=1
                             )
-                            date_input = gr.DatePicker(
+                            date_input = gr.DateTime(
                                 label="Fecha *",
-                                max_date=datetime.now(),
+                                include_time=False,
+                                type="datetime",
                                 scale=1
                             )
                             category_dd = gr.Dropdown(
                                 label="Categoría (opcional)",
                                 choices=[
-                                    "Vivienda 🏠",
-                                    "Alimentación 🍔",
-                                    "Transporte 🚗",
-                                    "Entretenimiento 🎮",
-                                    "Compras 🛒",
-                                    "Salud 💊",
-                                    "Educación 📚",
-                                    "Otros 💰"
+                                    ("Vivienda 🏠", "Vivienda"),
+                                    ("Alimentación 🍔", "Alimentación"),
+                                    ("Transporte 🚗", "Transporte"),
+                                    ("Entretenimiento 🎮", "Entretenimiento"),
+                                    ("Compras 🛒", "Compras"),
+                                    ("Salud 💊", "Salud"),
+                                    ("Educación 📚", "Educación"),
+                                    ("Otros 💰", "Otros")
                                 ],
                                 value=None,
                                 scale=1
                             )
-                        
+
                         desc_input = gr.Textbox(
                             label="Descripción",
                             placeholder="Ej: Compra en supermercado, Cena de trabajo...",
                             lines=2
                         )
-                        
+
                         with gr.Row():
                             add_btn = gr.Button("💾 Guardar Gasto", variant="primary")
                             clear_btn = gr.Button("🔄 Limpiar", variant="secondary")
-                        
+
                         add_output = gr.Textbox(
                             label="Estado",
                             interactive=False,
                             show_label=False
                         )
-                        
-                        def clear_form():
-                            return 0, None, None, "", ""
-                        
-                        add_btn.click(
-                            add_expense,
-                            inputs=[amount_input, date_input, desc_input, category_dd],
-                            outputs=[add_output]
-                        )
-                        
-                        clear_btn.click(
-                            clear_form,
-                            outputs=[amount_input, date_input, category_dd, desc_input, add_output]
-                        )
-                    
+
                     with gr.Tab("📋 Ver Gastos"):
                         gr.Markdown("### 📊 Lista de Gastos")
-                        
+
                         with gr.Row():
                             year_slider = gr.Dropdown(
                                 label="Año",
@@ -408,26 +384,17 @@ def create_interface():
                                 scale=1
                             )
                             refresh_btn = gr.Button("🔄 Actualizar", variant="primary", scale=0)
-                        
+
                         expenses_table = gr.Dataframe(
                             headers=["ID", "Fecha", "Descripción", "Monto", "Categoría", "ID_Gasto"],
                             datatype=["str", "str", "str", "str", "str", "str"],
-                            interactive=False,
-                            height=300
+                            interactive=False
+                          #  height=300
                         )
-                        
-                        def get_current_expenses():
-                            return get_expenses_data()
-                        
-                        refresh_btn.click(
-                            update_period,
-                            inputs=[year_slider, month_dd],
-                            outputs=[expenses_table, stat_total, stat_count, stat_avg, stat_top_cat, pie_chart, bar_chart]
-                        )
-                    
+
                     with gr.Tab("📈 Estadísticas"):
                         gr.Markdown("### 📊 Resumen de Gastos")
-                        
+
                         with gr.Row():
                             with gr.Column(scale=1):
                                 stat_total = gr.Number(label="💵 Total de Gastos", interactive=False)
@@ -437,29 +404,67 @@ def create_interface():
                                 stat_avg = gr.Number(label="📊 Promedio por Gasto", interactive=False)
                             with gr.Column(scale=1):
                                 stat_top_cat = gr.Textbox(label="🏆 Categoría Principal", interactive=False)
-                        
+
                         gr.Markdown("### 📈 Visualización")
-                        
+
                         with gr.Row():
                             with gr.Column(scale=1):
                                 pie_chart = gr.Plot(label="Distribución por Categoría")
                             with gr.Column(scale=1):
                                 bar_chart = gr.Plot(label="Gastos por Categoría")
-                        
+
                         refresh_btn2 = gr.Button("🔄 Actualizar Estadísticas", variant="primary")
-                        refresh_btn2.click(
-                            get_stats_data,
-                            outputs=[stat_total, stat_count, stat_avg, stat_top_cat, pie_chart, bar_chart]
-                        )
-        
+
         gr.Markdown("""
         ---
         *Prototipo de Gestión de Gastos Personales v1.0*
-        
+
         **Nota:** Este es un prototipo funcional. Los datos se almacenan en memoria y se perderán
         al cerrar la aplicación.
         """)
-    
+
+        # --- Registro de eventos (después de definir todos los componentes) ---
+
+        login_btn.click(
+            login_user,
+            inputs=[login_username, login_password],
+            outputs=[main_panel, auth_panel, login_output, username_display]
+        )
+
+        register_btn.click(
+            register_user,
+            inputs=[reg_fullname, reg_username, reg_password],
+            outputs=[register_output]
+        )
+
+        logout_btn.click(
+            logout_user,
+            inputs=[],
+            outputs=[main_panel, auth_panel, login_output, username_display]
+        )
+
+        add_btn.click(
+            add_expense,
+            inputs=[amount_input, date_input, desc_input, category_dd],
+            outputs=[add_output]
+        )
+
+        clear_btn.click(
+            lambda: (None, None, "", ""),
+            outputs=[date_input, category_dd, desc_input, add_output]
+        )
+
+        refresh_btn.click(
+            update_period,
+            inputs=[year_slider, month_dd],
+            outputs=[expenses_table, stat_total, stat_count, stat_avg, stat_top_cat, pie_chart, bar_chart]
+        )
+
+        refresh_btn2.click(
+            get_stats_data,
+            outputs=[stat_total, stat_count, stat_avg, stat_top_cat, pie_chart, bar_chart]
+        )
+
     return app
 
 

@@ -44,7 +44,7 @@ CATEGORY_KEYWORDS = {
     "Alimentación": [
         "comida", "supermercado", "restaurante", "cena", "almuerzo", 
         "desayuno", "fruta", "verdura", "carne", "pescado", "pan", 
-        "leche", "cafe", "delivery", "外卖", "vianda", "gastos"
+        "leche", "cafe", "delivery", "pedido a domicilio", "vianda", "gastos"
     ],
     "Transporte": [
         "gasolina", "diesel", "taxi", "uber", "bus", "metro", 
