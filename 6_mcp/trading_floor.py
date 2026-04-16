@@ -11,21 +11,23 @@ load_dotenv(override=True)
 
 RUN_EVERY_N_MINUTES = int(os.getenv("RUN_EVERY_N_MINUTES", "60"))
 RUN_EVEN_WHEN_MARKET_IS_CLOSED = (
-    os.getenv("RUN_EVEN_WHEN_MARKET_IS_CLOSED", "false").strip().lower() == "true"
+    os.getenv("RUN_EVEN_WHEN_MARKET_IS_CLOSED", "true").strip().lower() == "true"
 )
-USE_MANY_MODELS = os.getenv("USE_MANY_MODELS", "false").strip().lower() == "true"
+USE_MANY_MODELS = os.getenv("USE_MANY_MODELS", "true").strip().lower() == "true"
 
 names = ["Warren", "George", "Ray", "Cathie"]
 lastnames = ["Patience", "Bold", "Systematic", "Crypto"]
 
+print(f"Configuración: Ejecutar cada {RUN_EVERY_N_MINUTES} minutos, incluso si el mercado está cerrado: {RUN_EVEN_WHEN_MARKET_IS_CLOSED}, usar muchos modelos: {USE_MANY_MODELS}")
+
 if USE_MANY_MODELS:
     model_names = [
         "gpt-4.1-mini",
-        "deepseek-chat",
-        "gemini-2.5-flash",
-        "grok-3-mini-beta",
+        "mistral-large-3:675b",
+        "kimi-k2.5",
+        "llama-3.3-70b-versatile",
     ]
-    short_model_names = ["GPT 4.1 Mini", "DeepSeek V3", "Gemini 2.5 Flash", "Grok 3 Mini"]
+    short_model_names = ["GPT 4.1 Mini", "Mistra Large", "Gemini 2.0 Flash", "Llama 3.3 Versatile"]
 else:
     model_names = ["gpt-4o-mini"] * 4
     short_model_names = ["GPT 4o mini"] * 4
@@ -34,6 +36,7 @@ else:
 def create_traders() -> List[Trader]:
     traders = []
     for name, lastname, model_name in zip(names, lastnames, model_names):
+        print(f"Creando trader {name} {lastname} con modelo {model_name}")
         traders.append(Trader(name, lastname, model_name))
     return traders
 

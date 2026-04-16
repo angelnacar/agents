@@ -18,34 +18,38 @@ from mcp_params import trader_mcp_server_params, researcher_mcp_server_params
 
 load_dotenv(override=True)
 
-deepseek_api_key = os.getenv("DEEPSEEK_API_KEY")
+#deepseek_api_key = os.getenv("DEEPSEEK_API_KEY")
 google_api_key = os.getenv("GOOGLE_API_KEY")
-grok_api_key = os.getenv("GROK_API_KEY")
-openrouter_api_key = os.getenv("OPENROUTER_API_KEY")
+groq_api_key = os.getenv("GROQ_API_KEY")
+#openrouter_api_key = os.getenv("OPENROUTER_API_KEY")
+ollama_api_key = os.getenv("OLLAMA_API_KEY")
 
-DEEPSEEK_BASE_URL = "https://api.deepseek.com/v1"
-GROK_BASE_URL = "https://api.x.ai/v1"
 GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai/"
-OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
+OLLAMA_BASE_URL = "curl https://ollama.com/api/tags"
+GROQ_BASE_URL = "https://api.groq.com/openai/v1"
+
 
 MAX_TURNS = 30
 
-openrouter_client = AsyncOpenAI(base_url=OPENROUTER_BASE_URL, api_key=openrouter_api_key)
-deepseek_client = AsyncOpenAI(base_url=DEEPSEEK_BASE_URL, api_key=deepseek_api_key)
-grok_client = AsyncOpenAI(base_url=GROK_BASE_URL, api_key=grok_api_key)
+#openrouter_client = AsyncOpenAI(base_url=OPENROUTER_BASE_URL, api_key=openrouter_api_key)
+ollama_client = AsyncOpenAI(base_url=OLLAMA_BASE_URL, api_key=ollama_api_key)
+groq_client = AsyncOpenAI(base_url=GROQ_BASE_URL, api_key=groq_api_key)
 gemini_client = AsyncOpenAI(base_url=GEMINI_BASE_URL, api_key=google_api_key)
 
 
 def get_model(model_name: str):
-    if "/" in model_name:
-        return OpenAIChatCompletionsModel(model=model_name, openai_client=openrouter_client)
-    elif "deepseek" in model_name:
-        return OpenAIChatCompletionsModel(model=model_name, openai_client=deepseek_client)
-    elif "grok" in model_name:
-        return OpenAIChatCompletionsModel(model=model_name, openai_client=grok_client)
-    elif "gemini" in model_name:
-        return OpenAIChatCompletionsModel(model=model_name, openai_client=gemini_client)
+    if "mistral-large-3:675b" in model_name:
+        print(f"Creando modelo {model_name} con Ollama")
+        return OpenAIChatCompletionsModel(model=model_name, openai_client=ollama_client)
+    elif "llama-3.3-70b-versatile" in model_name:
+        print(f"Creando modelo {model_name} con Groq")
+
+        return OpenAIChatCompletionsModel(model=model_name, openai_client=groq_client)
+    elif "kimi-k2.5" in model_name:
+        print(f"Creando modelo {model_name} con Ollama")
+        return OpenAIChatCompletionsModel(model=model_name, openai_client=ollama_client)
     else:
+        print(f"Usando modelo {model_name} directamente")
         return model_name
 
 

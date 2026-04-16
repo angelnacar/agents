@@ -6,6 +6,7 @@ load_dotenv(override=True)
 
 brave_env = {"BRAVE_API_KEY": os.getenv("BRAVE_API_KEY")}
 polygon_api_key = os.getenv("POLYGON_API_KEY")
+env = {"TAVILY_API_KEY": os.getenv("TAVILY_API_KEY")}
 
 # El servidor MCP para que el Trader lea datos de mercado
 
@@ -35,9 +36,12 @@ def researcher_mcp_server_params(name: str):
         {"command": "uvx", "args": ["mcp-server-fetch"]},
         {
             "command": "npx",
-            "args": ["-y", "@modelcontextprotocol/server-brave-search"],
-            "env": brave_env,
-        },
+            "args": ["-y", "tavily-mcp@latest"],
+            "env": {
+                "TAVILY_API_KEY": env["TAVILY_API_KEY"],
+                "DEFAULT_PARAMETERS": "{\"include_images\": true, \"max_results\": 15, \"search_depth\": \"advanced\"}"
+            }
+},
         {
             "command": "npx",
             "args": ["-y", "mcp-memory-libsql"],
